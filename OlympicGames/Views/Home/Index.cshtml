@@ -1,0 +1,47 @@
+﻿@model CountryListViewModel
+@{
+    ViewData["Title"] = "Country GameId and Sports";
+}
+<div class="row">
+<div class="col-sm-3">
+<h3 class="mt-3">Conference</h3>
+<div class="list-group">
+    @foreach (Game game in Model.Games) {
+        <a asp-action="Index"
+           asp-route-activeConf="@game.GameId"
+           asp-route-activeDiv="@Model.ActiveSport"
+           class="list-group-item 
+                       @Model.CheckActiveGame(game.GameId)">@game.Name</a>
+    }
+</div>
+        <h3 class="mt-3">Division</h3>
+        <div class="list-group">
+            @foreach (Sport sport in Model.Sports) {
+                <a asp-action="Index"
+                   asp-route-activeConf="@Model.ActiveGame"
+                   asp-route-activeDiv="@sport.SportId"
+                   class="list-group-item 
+                       @Model.CheckActiveSport(sport.SportId)">@sport.Name</a>
+            }
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <ul class="list-inline">
+            @foreach (Country country in Model.Countries)
+            {
+                <li class="list-inline-item">
+                    <form asp-action="Details" method="post">
+                        <button type="submit" class="bg-white border-0">
+                            <img src="~/flags/@country.FlagImage" alt="@country.Name"
+                                 title="@country.Name | @country.Game.Name @country.Sport.Name" />
+                        </button>
+
+                        <input type="hidden" asp-for="@country.CountryId" />
+                        <input type="hidden" asp-for="ActiveGame" />
+                        <input type="hidden" asp-for="ActiveSport" />
+                    </form>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
