@@ -9,24 +9,30 @@ namespace OlympicGames.Models
         private List<Game> games;
 
         public List<Game> Games
-         {
-             get => games;
-             set
-             {
-                 games = value;
-                 games.Insert(0, new Game{GameId = "all", Name = "All"});
-             }
-         } 
+        {
+            get => games;
+            set
+            {
+                games = new List<Game>
+                {
+                    new Game {GameId = "all", Name = "All"}
+                };
+                games.AddRange(value);
+            }
+        }
 
-         private List<Sport> sports;
+        private List<Sport> sports;
 
          public List<Sport> Sports
          {
              get => sports;
              set
              {
-                 sports = value;
-                 sports.Insert(0, new Sport{SportId = "all", Name = "All"});
+                 sports = new List<Sport>
+                 {
+                     new Sport() {SportId = "all", Name = "All"}
+                 };
+                 sports.AddRange(value);
              }
          }
 

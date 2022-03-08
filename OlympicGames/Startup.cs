@@ -25,7 +25,16 @@ namespace OlympicGames
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+
+            services.AddRouting(options => options.LowercaseUrls = true);
+            services.AddMemoryCache();
+            services.AddSession(options =>
+                {
+                    options.IdleTimeout = TimeSpan.FromSeconds(60 * 5);
+                    options.Cookie.HttpOnly = false;
+                    options.Cookie.IsEssential = true;
+                });
+            services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddDbContext<CountryContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("CountryContext")));
         }
@@ -33,6 +42,7 @@ namespace OlympicGames
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -49,7 +59,8 @@ namespace OlympicGames
 
             app.UseRouting();
 
-            app.UseRouting();
+            app.UseSession();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
