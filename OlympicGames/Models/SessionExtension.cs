@@ -14,7 +14,7 @@ namespace OlympicGames.Models
         public static T GetObject<T>(this ISession session, string key)
         {
             var value = session.GetString(key);
-            return (string.IsNullOrEmpty(value)) ? default(T) : //error
+            return (string.IsNullOrEmpty(value)) ? default(T) : 
                 JsonConvert.DeserializeObject<T>(value);
         }
     }

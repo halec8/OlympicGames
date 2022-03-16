@@ -17,14 +17,18 @@ namespace OlympicGames.Controllers
             context = ctx;
         }
 
-        public IActionResult Index(string activeGame = "all",
-            string activeSport = "all")
+       // public IActionResult Index(string activeGame = "all",
+        //    string activeSport = "all")
+
+        public IActionResult Index(CountryListViewModel model)
 
         {
+            model.Games = context.Games.ToList();
+            model.Sports = context.Sports.ToList();
 
             var session = new OlympicSession(HttpContext.Session);
-            session.SetActiveGame(activeGame);
-            session.SetActiveSport(activeSport);
+            session.SetActiveGame(model.ActiveGame);
+            session.SetActiveSport(model.ActiveSport);
 
             int? count = session.GetMyCountryCount();
             if (count == null)
@@ -40,20 +44,12 @@ namespace OlympicGames.Controllers
                 session.SetMyCountries(mycountries);
             }
 
-            var model = new CountryListViewModel
-                {
-                    ActiveGame = activeGame,
-                    ActiveSport = activeSport,
-                    Games = context.Games.ToList(),
-                    Sports = context.Sports.ToList()
-                };
-
             IQueryable<Country> query = context.Countries;
-            if (activeGame != "all")
-                query = query.Where(c => c.Game.GameId.ToLower() == activeGame.ToLower());
-            if (activeSport != "all")
+            if (model.ActiveGame != "all")
+                query = query.Where(c => c.Game.GameId.ToLower() == model.ActiveGame.ToLower());
+            if (model.ActiveSport != "all")
                 query = query.Where(
-                    c => c.Sport.SportId.ToLower() == activeSport.ToLower());
+                    c => c.Sport.SportId.ToLower() == model.ActiveSport.ToLower());
             model.Countries = query.ToList();
 
             return View(model);
